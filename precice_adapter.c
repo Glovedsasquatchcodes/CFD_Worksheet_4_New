@@ -1,11 +1,12 @@
 #include "precice_adapter.h"
 #include "boundary_val.h"
-#include "stdlib.h"
+#include <stdlib.h>
 #include "adapters/c/SolverInterfaceC.h"
 
-int *precice_set_interface_vertices(int imax, int jmax, double dx, double dy, double x_origin, double y_origin,
+int *precice_set_interface_vertices(int imax, int jmax, double dx, double dy, 
+									double x_origin, double y_origin,
                                     int num_coupling_cells, int meshID, int **FLAG){
-	int dimension   = 3;
+	int dimension   = 3;//precicec_getDimension();
     int* vertexIDs  = (int*)malloc(num_coupling_cells*sizeof(int));
 
 
@@ -15,26 +16,26 @@ int *precice_set_interface_vertices(int imax, int jmax, double dx, double dy, do
     int coupledcellcount = 0;
 	for(int j=0; j<jmax; j++){ //left boundary
 		if(FLAG[0][j]&(1<<9)){
-            vertices[dimension*coupledcellcount]     = x_origin + (0 - 0.5)*dx;
+            vertices[dimension*coupledcellcount]     = 0;
             vertices[dimension*coupledcellcount + 1] = y_origin + (j - 0.5)*dy;
 			vertices[dimension*coupledcellcount + 2] = 0;
             coupledcellcount++;
 		}
 		
 	}
-	for(int j=0; j<jmax; j++){ //Right boundary
+	for(int j=0; j<jmax; j++){ //Right boundary 
 		if(FLAG[imax-1][j]&(1<<9)){
-            vertices[dimension*coupledcellcount]     = x_origin + (imax -1 - 0.5)*dx;
+            vertices[dimension*coupledcellcount]     = x_origin + (imax - 2)*dx;
             vertices[dimension*coupledcellcount + 1] = y_origin + (j - 0.5)*dy;
 			vertices[dimension*coupledcellcount + 2] = 0;
 			coupledcellcount++;
 		}
 		
 	}
-	for(int i=0; i<imax; i++){ //Top boundary
+	for(int i=0; i<imax; i++){ //Top boundary 
 		if(FLAG[i][jmax-1]&(1<<9)){
             vertices[dimension*coupledcellcount]     = x_origin + (i - 0.5)*dx;
-            vertices[dimension*coupledcellcount + 1] = y_origin + (jmax - 1 - 0.5)*dy;
+            vertices[dimension*coupledcellcount + 1] = y_origin + (jmax - 2)*dy;
 			vertices[dimension*coupledcellcount + 2] = 0;
 			coupledcellcount++;
 		}
@@ -43,7 +44,7 @@ int *precice_set_interface_vertices(int imax, int jmax, double dx, double dy, do
 	for(int i=0; i<imax; i++){ //Bottom boundary
 		if(FLAG[i][0]&(1<<9)){
             vertices[dimension*coupledcellcount]     = x_origin + (i - 0.5)*dx;
-            vertices[dimension*coupledcellcount + 1] = y_origin + (0 - 0.5)*dy;
+            vertices[dimension*coupledcellcount + 1] = 0;
 			vertices[dimension*coupledcellcount + 2] = 0;
 			coupledcellcount++;
 		}
@@ -80,8 +81,9 @@ int *precice_set_interface_vertices(int imax, int jmax, double dx, double dy, do
 	
 }
 
-void precice_write_temperature(int imax, int jmax, int num_coupling_cells, double *temperature, int *vertexIDs,
-                               int temperatureID, double **TEMP, int **FLAG)
+void precice_write_temperature(	int imax, int jmax, int num_coupling_cells, 
+								double *temperature, int *vertexIDs,
+                               	int temperatureID, double **TEMP, int **FLAG)
 {
 	int count = 0;
 	for(int j=0; j<jmax; j++){ //left boundary
@@ -137,7 +139,8 @@ void precice_write_temperature(int imax, int jmax, int num_coupling_cells, doubl
 	
 }
 
-void set_coupling_boundary(int imax, int jmax, double dx, double dy, double *heatflux, double **TEMP, int **FLAG)
+void set_coupling_boundary(	int imax, int jmax, double dx, double dy, 
+							double *heatflux, double **TEMP, int **FLAG)
 {
 	//precice.readBlockScalarData(temperatureID, num_coupling_cells, vertexIDs, heatflux); shift this to main as well
 	int count = 0;
