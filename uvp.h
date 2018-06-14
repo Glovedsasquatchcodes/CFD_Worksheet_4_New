@@ -115,10 +115,10 @@ void calculate_uv(
   int **flag
 );
 
-void calculate_temp(double **temp, double Pr, double Re, int imax,int jmax,double dx, double dy,double dt, double alpha,double **U,double **V,int **flag, double TI, double T_h, double T_c);
+void calculate_temp(double **temp, double Pr, double Re, int imax,int jmax,double dx, double dy,
+		double dt, double alpha,double **U,double **V,int **flag, double TI);
 
 
 void reset_obstacles(double **U, double **V, double **P, double **T, int **flag, int imax, int jmax);
 
 #endif
-
