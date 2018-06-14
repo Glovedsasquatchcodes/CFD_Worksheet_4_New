@@ -1,12 +1,11 @@
 #include "precice_adapter.h"
 #include "boundary_val.h"
-#include <stdlib.h>
+#include "stdlib.h"
 #include "adapters/c/SolverInterfaceC.h"
 
-int *precice_set_interface_vertices(int imax, int jmax, double dx, double dy, 
-									double x_origin, double y_origin,
+int *precice_set_interface_vertices(int imax, int jmax, double dx, double dy, double x_origin, double y_origin,
                                     int num_coupling_cells, int meshID, int **FLAG){
-	int dimension   = 3;//precicec_getDimension();
+	int dimension   = 3;
     int* vertexIDs  = (int*)malloc(num_coupling_cells*sizeof(int));
 
 
@@ -81,9 +80,8 @@ int *precice_set_interface_vertices(int imax, int jmax, double dx, double dy,
 	
 }
 
-void precice_write_temperature(	int imax, int jmax, int num_coupling_cells, 
-								double *temperature, int *vertexIDs,
-                               	int temperatureID, double **TEMP, int **FLAG)
+void precice_write_temperature(int imax, int jmax, int num_coupling_cells, double *temperature, int *vertexIDs,
+                               int temperatureID, double **TEMP, int **FLAG)
 {
 	int count = 0;
 	for(int j=0; j<jmax; j++){ //left boundary
@@ -139,8 +137,7 @@ void precice_write_temperature(	int imax, int jmax, int num_coupling_cells,
 	
 }
 
-void set_coupling_boundary(	int imax, int jmax, double dx, double dy, 
-							double *heatflux, double **TEMP, int **FLAG)
+void set_coupling_boundary(int imax, int jmax, double dx, double dy, double *heatflux, double **TEMP, int **FLAG)
 {
 	//precice.readBlockScalarData(temperatureID, num_coupling_cells, vertexIDs, heatflux); shift this to main as well
 	int count = 0;

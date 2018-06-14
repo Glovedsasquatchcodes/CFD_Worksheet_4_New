@@ -47,18 +47,11 @@
  * - calculate_uv() Calculate the velocity at the next time step.
  */
 int main(int argc, char* argv[]){
-			int select=0;
 			char *problem = argv[1];
 			char *filename = malloc(strlen(problem) + 5);
 			strcpy(filename, problem);
 	                strcat(filename, ".dat");
 
-			if(strcmp(problem, "karman_vortex")==0) select=1;
-			if(strcmp(problem, "step_flow")==0) select=2;
-			if(strcmp(problem, "natural_convection")==0) select=3;
-			if(strcmp(problem, "fluid_trap")==0) select=4;
-			if(strcmp(problem, "rb_convection")==0) select=5;
-			
 			//define parameter variables
 			double Re;                /* reynolds number   */
 			double UI;                /* velocity x-direction */
@@ -97,18 +90,6 @@ int main(int argc, char* argv[]){
 			//Read and assign the parameter values from file
 			read_parameters(filename, &imax, &jmax, &xlength, &ylength, &dt, &t_end, &tau, &dt_value, &eps, &omg, &alpha, &itermax,&GX, &GY, &Re, &Pr, &UI, &VI, &PI, &TI, &T_h, &T_c, &beta, &dx, &dy, &x_origin, &y_origin, geometry, precice_config, participant_name, mesh_name, read_data_name, write_data_name);
 
-			//T_flag =1 => Flag for heat transfer problems to include T_flag equations for solving
-			int T_flag = 1;
-			if(((select==1)||(select==2))){
-				if( (Pr!=0)||(TI!=0)||(T_h!=0)||(T_c!=0)||(beta!=0) ){
-					char szBuff[80];
-					sprintf( szBuff, "Input file incompatible. Please check .dat file. \n");
-					ERROR( szBuff );
-				}
-				else  T_flag = 0;
-			}
-
-
 			//Allocate the matrices for P(pressure), U(velocity_x), V(velocity_y), F, and G on heap
 			printf("Allocate the matrices for P(pressure), U(velocity_x), V(velocity_y), F, and G on heap... \n");
 			double **P = matrix(0, imax-1, 0, jmax-1);
@@ -119,16 +100,15 @@ int main(int argc, char* argv[]){
 			double **RS = matrix(0, imax-1, 0, jmax-1);
 			int **flag = imatrix(0, imax-1, 0, jmax-1);
 			double **T;
-			if(T_flag){	
-				T = matrix(0, imax-1, 0, jmax-1);
-			}
+			T = matrix(0, imax-1, 0, jmax-1);
+			
 			printf("Matrices allocated... \n \n");
 
 			//Flag Initialization
 			init_flag(geometry, imax, jmax, flag);
 
 			//Initialize the U, V and P
-			init_uvp(UI, VI, PI, TI, imax, jmax, U, V, P, T, flag, T_flag);
+			init_uvp(UI, VI, PI, TI, imax, jmax, U, V, P, T, flag);
 
 
 			//Make solution folder
@@ -173,19 +153,18 @@ int main(int argc, char* argv[]){
 
 			while (precicec_isCouplingOngoing()) {
 	
-				calculate_dt(Re,tau,&dt,dx,dy,imax,jmax, U, V, Pr, T_flag);
+				calculate_dt(Re,tau,&dt,dx,dy,imax,jmax, U, V, Pr);
 				dt = min(dt, precice_dt); // change solver_dt to dt
 
 				set_coupling_boundary(imax, jmax, dx, dy, heatfluxCoupled, T, flag);							
 				boundaryvalues(imax, jmax, U, V, flag);
 
-				if(T_flag){
-					calculate_temp(T, Pr, Re, imax, jmax, dx, dy, dt, alpha, U, V, flag, TI, T_h, T_c, select);
-				}
+				calculate_temp(T, Pr, Re, imax, jmax, dx, dy, dt, alpha, U, V, flag, TI, T_h, T_c);
+				
 
 				spec_boundary_val(imax, jmax, U, V, flag);
 
-				calculate_fg(Re,GX,GY,alpha,dt,dx,dy,imax,jmax,U,V,F,G,flag, beta, T, T_flag);
+				calculate_fg(Re,GX,GY,alpha,dt,dx,dy,imax,jmax,U,V,F,G,flag, beta, T);
 									
 				calculate_rs(dt,dx,dy,imax,jmax,F,G,RS,flag);
 											
@@ -211,10 +190,10 @@ int main(int argc, char* argv[]){
 				precice_dt = precicec_advance(dt); // advance coupling
 				precicec_readBlockScalarData(heatFluxID, num_coupling_cells, vertexIDs, heatfluxCoupled); //changed vertexsize to num_coupling_cells	
 
-				reset_obstacles(U, V, P, T, flag, imax, jmax,T_flag);
+				reset_obstacles(U, V, P, T, flag, imax, jmax);
 	
 				if ((t >= n1*dt_value)&&(t!=0.0)){
-					write_vtkFile(sol_directory ,n ,xlength ,ylength ,imax-2 ,jmax-2,dx ,dy ,U ,V ,P,T,T_flag);
+					write_vtkFile(sol_directory ,n ,xlength ,ylength ,imax-2 ,jmax-2,dx ,dy ,U ,V ,P,T);
 					printf("Writing Solutions at %f seconds in the file \n",n1*dt_value);
 				    	n1=n1+ 1;
 				    	continue;
@@ -234,9 +213,8 @@ int main(int argc, char* argv[]){
 			free_matrix( G, 0, imax-1, 0, jmax-1);
 			free_matrix(RS, 0, imax-1, 0, jmax-1);
 			free_imatrix(flag, 0, imax-1, 0, jmax-1);
-			if(T_flag) { 
-				free_matrix(T, 0, imax-1, 0, jmax-1);
-			}
+			free_matrix(T, 0, imax-1, 0, jmax-1);
+			
 			
 
 			printf("End \n");

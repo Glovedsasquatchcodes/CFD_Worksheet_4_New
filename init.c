@@ -90,7 +90,7 @@ void read_parameters( const char *szFileName,       /* name of the file */
 }
 
 
-void init_uvp(double UI, double VI, double PI, double TI, int imax, int jmax,double** U, double** V, double** P, double** T, int** flag,int include_temp){
+void init_uvp(double UI, double VI, double PI, double TI, int imax, int jmax,double** U, double** V, double** P, double** T, int** flag){
 	printf("Initialization of U,V,P,T ... \n");
 	
 	for(int i=0; i<imax; i++){
@@ -100,8 +100,7 @@ void init_uvp(double UI, double VI, double PI, double TI, int imax, int jmax,dou
 				U[i][j] = UI;
 				V[i][j] = VI;
 				P[i][j] = PI;
-            		if (include_temp)
-            		{ T[i][j] =TI; }
+            			T[i][j] =TI; 
 			}
 		}
 	}
@@ -131,15 +130,6 @@ void forbid_assert(int imax, int jmax, int **pic)
 {
 int **pic1 = imatrix(0, imax+1, 0, jmax+1);
 init_imatrix( pic1, 0, imax+1, 0, jmax+1, 0); 
-
-/*for (int i = 0; i<=imax+1; i++)
-{
-for(int j=0; j<=jmax+1; j++)
-{
-pic1[i][j]=0;
-}
-}*/
-
 int counter = 0;
 
     for(int i=1; i<=imax; i++)

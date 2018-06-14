@@ -90,8 +90,7 @@ double** U,
 double** V, 
 double** P, 
 double** T, 
-int** flag,
-int include_temp
+int** flag
 );
 
 int  Fluid(int pic);

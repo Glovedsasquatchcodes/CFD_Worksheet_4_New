@@ -14,8 +14,7 @@ void write_vtkFile(const char *szProblem,
                  double **U,
                  double **V,
                  double **P,
-		 double **T,
-		 int include_temp
+		 double **T
 ) {
   
   int i,j;
@@ -54,10 +53,8 @@ void write_vtkFile(const char *szProblem,
     }
   }
 
-if(include_temp)
-{
+
   fprintf(fp,"\n");
-  //fprintf(fp,"CELL_DATA %i \n", ((imax)*(jmax)) );
   fprintf(fp, "SCALARS temperature float 1\n"); 
   fprintf(fp, "LOOKUP_TABLE default \n");
   for(j = 1; j < jmax+1; j++) {
@@ -65,7 +62,7 @@ if(include_temp)
       fprintf(fp, "%f\n", T[i][j] );
     }
   }
-}
+
 
   if( fclose(fp) )
   {
