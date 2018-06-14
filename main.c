@@ -75,8 +75,8 @@ int main(int argc, char* argv[]){
 			double dt_value;           /* time for output */
 			double Pr;
 			double TI;
-			double T_h;
-			double T_c;
+			//double T_h;
+			//double T_c;
 			double beta;
 			double x_origin;
 		        double y_origin;
@@ -88,7 +88,7 @@ int main(int argc, char* argv[]){
 		        char *write_data_name;
 
 			//Read and assign the parameter values from file
-			read_parameters(filename, &imax, &jmax, &xlength, &ylength, &dt, &t_end, &tau, &dt_value, &eps, &omg, &alpha, &itermax,&GX, &GY, &Re, &Pr, &UI, &VI, &PI, &TI, &T_h, &T_c, &beta, &dx, &dy, &x_origin, &y_origin, geometry, precice_config, participant_name, mesh_name, read_data_name, write_data_name);
+			read_parameters(filename, &imax, &jmax, &xlength, &ylength, &dt, &t_end, &tau, &dt_value, &eps, &omg, &alpha, &itermax,&GX, &GY, &Re, &Pr, &UI, &VI, &PI, &TI, &beta, &dx, &dy, &x_origin, &y_origin, geometry, precice_config, participant_name, mesh_name, read_data_name, write_data_name);
 
 			//Allocate the matrices for P(pressure), U(velocity_x), V(velocity_y), F, and G on heap
 			printf("Allocate the matrices for P(pressure), U(velocity_x), V(velocity_y), F, and G on heap... \n");
@@ -159,7 +159,7 @@ int main(int argc, char* argv[]){
 				set_coupling_boundary(imax, jmax, dx, dy, heatfluxCoupled, T, flag);							
 				boundaryvalues(imax, jmax, U, V, flag);
 
-				calculate_temp(T, Pr, Re, imax, jmax, dx, dy, dt, alpha, U, V, flag, TI, T_h, T_c);
+				calculate_temp(T, Pr, Re, imax, jmax, dx, dy, dt, alpha, U, V, flag, TI);
 				
 
 				spec_boundary_val(imax, jmax, U, V, flag);
