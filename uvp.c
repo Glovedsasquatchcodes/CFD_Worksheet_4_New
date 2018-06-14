@@ -171,7 +171,7 @@ void calculate_rs(double dt,
 }
 
 void calculate_temp(double **temp, double Pr, double Re, int imax,int jmax,double dx, double dy,
-		double dt, double alpha,double **U,double **V,int **flag, double TI, double T_h, double T_c)
+		double dt, double alpha,double **U,double **V,int **flag, double TI)
 {   
 	for(int i = 0; i<imax; ++i){
 	  	for(int j = 0; j<jmax; ++j)
@@ -197,11 +197,11 @@ void calculate_temp(double **temp, double Pr, double Re, int imax,int jmax,doubl
 	  		if (flag[i][j]&(1<<4) ) temp[i][j] = TI;
 	  	}
 	}
-		for(int j=0; j<jmax; j++)
+		/*for(int j=0; j<jmax; j++)
 		{
 			temp[0][j] = 2*T_h - temp[1][j];
 			temp[imax-1][j] = 2*T_c - temp[imax-2][j];		
-		}
+		}*/
 		
 	
 	double **temp1 = temp;
@@ -256,4 +256,3 @@ void reset_obstacles(double **U, double **V, double **P, double **T, int **flag,
 
 
 }
-
