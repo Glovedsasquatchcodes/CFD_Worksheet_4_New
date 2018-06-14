@@ -23,8 +23,6 @@ void read_parameters( const char *szFileName,       /* name of the file */
                     double *VI,                /* velocity y-direction */
                     double *PI,                /* pressure */
        		    double *TI,
-		    double *T_h,
-		    double *T_c,
 		    double *beta,
 		    double *dx,                /* length of a cell x-dir. */
 		    double *dy,               /* length of a cell y-dir. */
@@ -66,8 +64,6 @@ void read_parameters( const char *szFileName,       /* name of the file */
 			READ_DOUBLE( szFileName, *VI );
 			READ_DOUBLE( szFileName, *PI );
 			READ_DOUBLE( szFileName, *TI );
-			READ_DOUBLE( szFileName, *T_h );
-			READ_DOUBLE( szFileName, *T_c );
 			READ_DOUBLE( szFileName, *beta );
 			READ_DOUBLE( szFileName, *x_origin);
 			READ_DOUBLE( szFileName, *y_origin);
@@ -75,8 +71,9 @@ void read_parameters( const char *szFileName,       /* name of the file */
 	
 			//READ_STRING( szFileName, problem);
 			READ_STRING( szFileName, geometry);
-
+			printf("precong\n");
 			READ_STRING( szFileName, precice_config);
+			printf("precong\n");
 			READ_STRING( szFileName, participant_name);
 			READ_STRING( szFileName, mesh_name);
 			READ_STRING( szFileName, read_data_name);

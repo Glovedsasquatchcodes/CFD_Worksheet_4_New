@@ -58,8 +58,6 @@ void read_parameters( const char *szFileName,       /* name of the file */
                     double *VI,                /* velocity y-direction */
                     double *PI,                /* pressure */
        		    double *TI,
-		    double *T_h,
-		    double *T_c,
 		    double *beta,
 		    double *dx,                /* length of a cell x-dir. */
 		    double *dy,               /* length of a cell y-dir. */
