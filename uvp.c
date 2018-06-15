@@ -4,7 +4,6 @@
 #include"boundary_val.h"
 #include <stdio.h>
 
-/////////////////////////////////////////////////////////////////////
 void calculate_dt(double Re,
                   double tau,
                   double *dt,
@@ -31,7 +30,7 @@ void calculate_dt(double Re,
 				}
 			}
 			 
-			 double x, y, z, w;
+			 double x, y, z;
 			 
 			 x = ((Re*Pr)/2.0)*( (dx*dx)*(dy*dy)/( (dx*dx)+(dy*dy) ) );
 
@@ -176,21 +175,21 @@ void calculate_temp(double **temp, double Pr, double Re, int imax,int jmax,doubl
 	for(int i = 0; i<imax; ++i){
 	  	for(int j = 0; j<jmax; ++j)
 	  	{
-	  		if ( B_O(flag[i][j]) )  temp[i][j] = temp[i+1][j];
+	  		if ( B_O(flag[i][j]) && ~(flag[i][j] & (1<<9)))  temp[i][j] = temp[i+1][j];
 
-	  		if ( B_W(flag[i][j]) )  temp[i][j] = temp[i-1][j];
+	  		if ( B_W(flag[i][j]) && ~(flag[i][j] & (1<<9)))  temp[i][j] = temp[i-1][j];
 
-	  		if ( B_N(flag[i][j]) )  temp[i][j] = temp[i][j+1];
+	  		if ( B_N(flag[i][j]) && ~(flag[i][j] & (1<<9)))  temp[i][j] = temp[i][j+1];
 
-	  		if ( B_S(flag[i][j]) )  temp[i][j] = temp[i][j-1];
+	  		if ( B_S(flag[i][j]) && ~(flag[i][j] & (1<<9)))  temp[i][j] = temp[i][j-1];
 
-	  		if ( B_NO(flag[i][j]) ) temp[i][j] = (temp[i][j+1] + temp[i+1][j])/2;
+	  		if ( B_NO(flag[i][j]) && ~(flag[i][j] & (1<<9))) temp[i][j] = (temp[i][j+1] + temp[i+1][j])/2;
 
-	  		if ( B_NW(flag[i][j]) ) temp[i][j] = (temp[i][j+1] + temp[i-1][j])/2;
+	  		if ( B_NW(flag[i][j]) && ~(flag[i][j] & (1<<9))) temp[i][j] = (temp[i][j+1] + temp[i-1][j])/2;
 
-	  		if ( B_SO(flag[i][j]) ) temp[i][j] = (temp[i][j-1] + temp[i+1][j])/2;
+	  		if ( B_SO(flag[i][j]) && ~(flag[i][j] & (1<<9))) temp[i][j] = (temp[i][j-1] + temp[i+1][j])/2;
 
-	  		if ( B_SW(flag[i][j]) ) temp[i][j] = (temp[i][j-1] + temp[i-1][j])/2;
+	  		if ( B_SW(flag[i][j]) && ~(flag[i][j] & (1<<9))) temp[i][j] = (temp[i][j-1] + temp[i-1][j])/2;
 
 	  		if (flag[i][j]&(1<<3) ) temp[i][j] = temp[i-1][j];
 

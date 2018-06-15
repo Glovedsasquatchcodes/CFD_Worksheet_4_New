@@ -97,7 +97,7 @@ void assert_error();
 
 void forbid_assert(int imax, int jmax, int **pic);
 
-void init_flag(char* geometry, int imax, int jmax, int **flag);
+void init_flag(char* geometry, int imax, int jmax, int **flag, int *num_coupling);
 
 int num_coupling( char* geometry, int imax, int jmax);
 

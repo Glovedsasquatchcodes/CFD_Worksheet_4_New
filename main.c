@@ -90,6 +90,14 @@ int main(int argc, char* argv[]){
 			//Read and assign the parameter values from file
 			read_parameters(filename, &imax, &jmax, &xlength, &ylength, &dt, &t_end, &tau, &dt_value, &eps, &omg, &alpha, &itermax,&GX, &GY, &Re, &Pr, &UI, &VI, &PI, &TI, &beta, &dx, &dy, &x_origin, &y_origin, geometry, precice_config, participant_name, mesh_name, read_data_name, write_data_name);
 
+			geometry = "natural_convection.pgm";			
+			printf("Name of geometry: %s\n", geometry);
+			precice_config = "precice-configs/precice_config_plate_explicit.xml";
+			participant_name = "Fluid";
+			mesh_name = "Fluid-Mesh";
+			read_data_name = "Heat-Flux";
+			write_data_name = "Temperature";
+
 			//Allocate the matrices for P(pressure), U(velocity_x), V(velocity_y), F, and G on heap
 			printf("Allocate the matrices for P(pressure), U(velocity_x), V(velocity_y), F, and G on heap... \n");
 			double **P = matrix(0, imax-1, 0, jmax-1);
@@ -101,11 +109,11 @@ int main(int argc, char* argv[]){
 			int **flag = imatrix(0, imax-1, 0, jmax-1);
 			double **T;
 			T = matrix(0, imax-1, 0, jmax-1);
-			
+			int num_coupling;	
 			printf("Matrices allocated... \n \n");
 
 			//Flag Initialization
-			init_flag(geometry, imax, jmax, flag);
+			init_flag(geometry, imax, jmax, flag, &num_coupling);
 
 			//Initialize the U, V and P
 			init_uvp(UI, VI, PI, TI, imax, jmax, U, V, P, T, flag);
@@ -125,43 +133,52 @@ int main(int argc, char* argv[]){
 			// Algorithm starts from here
 			printf("Alogrithm started........\n");
 			double t=0; int n=0; int n1=0;
+			printf("Debug_1\n");
 
 			// initialize preCICE
 			precicec_createSolverInterface(participant_name, precice_config, 0, 1);
+			printf("Debug_2\n");
 			int dim = precicec_getDimensions();
+
+			printf("Debug_3\n");
 			
 			// define coupling mesh
 			int meshID = precicec_getMeshID(mesh_name);
-			int num_coupling_cells = num_coupling(geometry,imax,jmax);//determine no. of coupling cells 					
-    			int* vertexIDs = precice_set_interface_vertices(imax,jmax, dx, dy, x_origin, y_origin, num_coupling_cells, meshID, flag); // get coupling cell ids
+			printf("Debug_4\n");
+			//int num_coupling_cells = num_coupling;//determine no. of coupling cells 
+			printf("Debug_5\n");					
+    			int* vertexIDs = precice_set_interface_vertices(imax,jmax, dx, dy, x_origin, y_origin, num_coupling, meshID, flag); // get coupling cell ids
+			printf("Debug_11\n");
 
 			// define Dirichlet part of coupling written by this solver
 			int temperatureID = precicec_getDataID(write_data_name, meshID);
-			double* temperatureCoupled = (double*) malloc(sizeof(double) * num_coupling_cells);
+			double* temperatureCoupled = (double*) malloc(sizeof(double) * num_coupling);
+
+			printf("Debug_12\n");
 
 			// define Neumann part of coupling read by this solver
 			int heatFluxID = precicec_getDataID(read_data_name, meshID);
-			double* heatfluxCoupled = (double*) malloc(sizeof(double) * num_coupling_cells);
+			double* heatfluxCoupled = (double*) malloc(sizeof(double) * num_coupling);
 				
 			// call precicec_initialize()
 			double precice_dt = precicec_initialize();
 
 			// initialize data at coupling interface
-			precice_write_temperature(imax,jmax,num_coupling_cells,temperatureCoupled,vertexIDs,temperatureID,T,flag); 
+			precice_write_temperature(imax,jmax,num_coupling,temperatureCoupled,vertexIDs,temperatureID,T,flag); 
 			precicec_initialize_data(); // synchronize with OpenFOAM
-			precicec_readBlockScalarData(heatFluxID, num_coupling_cells, vertexIDs, heatfluxCoupled);//read heatfluxCoupled	changed vertexsize to num_coupling_cells	
+			precicec_readBlockScalarData(heatFluxID, num_coupling, vertexIDs, heatfluxCoupled);//read heatfluxCoupled	changed vertexsize to num_coupling_cells	
 
 			while (precicec_isCouplingOngoing()) {
 	
 				calculate_dt(Re,tau,&dt,dx,dy,imax,jmax, U, V, Pr);
-				dt = min(dt, precice_dt); // change solver_dt to dt
+				dt = fmin(dt, precice_dt); // change solver_dt to dt
+
+				boundaryvalues(imax, jmax, U, V, flag);
 
 				set_coupling_boundary(imax, jmax, dx, dy, heatfluxCoupled, T, flag);							
-				boundaryvalues(imax, jmax, U, V, flag);
 
 				calculate_temp(T, Pr, Re, imax, jmax, dx, dy, dt, alpha, U, V, flag, TI);
 				
-
 				spec_boundary_val(imax, jmax, U, V, flag);
 
 				calculate_fg(Re,GX,GY,alpha,dt,dx,dy,imax,jmax,U,V,F,G,flag, beta, T);
@@ -186,9 +203,9 @@ int main(int argc, char* argv[]){
 
 				calculate_uv(dt,dx,dy,imax,jmax,U,V,F,G,P,flag);
 			
-				precice_write_temperature(imax,jmax,num_coupling_cells,temperatureCoupled,vertexIDs,temperatureID,T, flag);
+				precice_write_temperature(imax,jmax,num_coupling,temperatureCoupled,vertexIDs,temperatureID,T, flag);
 				precice_dt = precicec_advance(dt); // advance coupling
-				precicec_readBlockScalarData(heatFluxID, num_coupling_cells, vertexIDs, heatfluxCoupled); //changed vertexsize to num_coupling_cells	
+				precicec_readBlockScalarData(heatFluxID, num_coupling, vertexIDs, heatfluxCoupled); //changed vertexsize to num_coupling_cells	
 
 				reset_obstacles(U, V, P, T, flag, imax, jmax);
 	

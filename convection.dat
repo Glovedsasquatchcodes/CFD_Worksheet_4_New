@@ -19,20 +19,20 @@ jmax		40
 # 1 - free-slip
 # 2 - outflow
 # 3 - inflow
-# 4 - coupling
-# 6 - fluid
+# 9 - coupling
+# 4 - fluid
 #--------------------------------------------
 
 problem     convection
-geometry    coupling_natural_convection
+geometry    /natural_convection.pgm
 
 #--------------------------------------------
 #               PRECICE
 #--------------------------------------------
 
-precice_config		precice
+precice_config		/precice-configs/precice_config_plate_explicit.xml
 participant_name	Fluid
-mesh_name		Fluid-Mesh
+mesh_name			Fluid-Mesh
 read_data_name		Heat-Flux
 write_data_name		Temperature
 
