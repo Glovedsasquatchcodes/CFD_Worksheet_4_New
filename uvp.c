@@ -175,33 +175,29 @@ void calculate_temp(double **temp, double Pr, double Re, int imax,int jmax,doubl
 	for(int i = 0; i<imax; ++i){
 	  	for(int j = 0; j<jmax; ++j)
 	  	{
-	  		if ( B_O(flag[i][j]) && ~(flag[i][j] & (1<<9)))  temp[i][j] = temp[i+1][j];
+			if((flag[i][j] & (1<<9))==0){
+		  		if ( B_O(flag[i][j]))  temp[i][j] = temp[i+1][j];
 
-	  		if ( B_W(flag[i][j]) && ~(flag[i][j] & (1<<9)))  temp[i][j] = temp[i-1][j];
+		  		if ( B_W(flag[i][j]))  temp[i][j] = temp[i-1][j];
 
-	  		if ( B_N(flag[i][j]) && ~(flag[i][j] & (1<<9)))  temp[i][j] = temp[i][j+1];
+		  		if ( B_N(flag[i][j]))  temp[i][j] = temp[i][j+1];
 
-	  		if ( B_S(flag[i][j]) && ~(flag[i][j] & (1<<9)))  temp[i][j] = temp[i][j-1];
+		  		if ( B_S(flag[i][j]))  temp[i][j] = temp[i][j-1];
 
-	  		if ( B_NO(flag[i][j]) && ~(flag[i][j] & (1<<9))) temp[i][j] = (temp[i][j+1] + temp[i+1][j])/2;
+		  		if ( B_NO(flag[i][j])) temp[i][j] = (temp[i][j+1] + temp[i+1][j])/2;
 
-	  		if ( B_NW(flag[i][j]) && ~(flag[i][j] & (1<<9))) temp[i][j] = (temp[i][j+1] + temp[i-1][j])/2;
+		  		if ( B_NW(flag[i][j])) temp[i][j] = (temp[i][j+1] + temp[i-1][j])/2;
 
-	  		if ( B_SO(flag[i][j]) && ~(flag[i][j] & (1<<9))) temp[i][j] = (temp[i][j-1] + temp[i+1][j])/2;
+		  		if ( B_SO(flag[i][j])) temp[i][j] = (temp[i][j-1] + temp[i+1][j])/2;
 
-	  		if ( B_SW(flag[i][j]) && ~(flag[i][j] & (1<<9))) temp[i][j] = (temp[i][j-1] + temp[i-1][j])/2;
+		  		if ( B_SW(flag[i][j])) temp[i][j] = (temp[i][j-1] + temp[i-1][j])/2;
 
-	  		if (flag[i][j]&(1<<3) ) temp[i][j] = temp[i-1][j];
+		  		if (flag[i][j]&(1<<3) ) temp[i][j] = temp[i-1][j];
 
-	  		if (flag[i][j]&(1<<4) ) temp[i][j] = TI;
+		  		if (flag[i][j]&(1<<4) ) temp[i][j] = TI;
+			}
 	  	}
 	}
-		/*for(int j=0; j<jmax; j++)
-		{
-			temp[0][j] = 2*T_h - temp[1][j];
-			temp[imax-1][j] = 2*T_c - temp[imax-2][j];		
-		}*/
-		
 	
 	double **temp1 = temp;
 	    		
