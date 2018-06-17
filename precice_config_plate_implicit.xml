@@ -46,7 +46,7 @@
       <max-iterations value="200" />
       <min-iteration-convergence-measure min-iterations="20" data="Temperature" mesh="Fluid-Mesh"/>
         <exchange data="Temperature" mesh="Fluid-Mesh" from="Fluid" to="Solid"/>
-        <exchange data="Heat-Flux" mesh="Fluid-Mesh" from="Solid" to="Fluid" />
+        <exchange data="Heat-Flux" mesh="Fluid-Mesh" from="Solid" to="Fluid" initialize="true" />
     </coupling-scheme:serial-implicit>
 
     </solver-interface>

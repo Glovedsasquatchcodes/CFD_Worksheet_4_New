@@ -1,1 +1,21 @@
-Timesteps  Total_Iterations  Iterations  Convergence  deleted_Columns  
+Timesteps  Total_Iterations  Iterations  Convergence  avgConvRate(0)  deleted_Columns  
+1  20  20  1  inf  0  
+2  40  20  1  inf  0  
+3  60  20  1  inf  0  
+4  80  20  1  inf  0  
+5  100  20  1  inf  0  
+6  120  20  1  inf  0  
+7  140  20  1  inf  0  
+8  160  20  1  inf  0  
+9  180  20  1  inf  0  
+10  200  20  1  inf  0  
+11  220  20  1  inf  0  
+12  240  20  1  inf  0  
+13  260  20  1  inf  0  
+14  280  20  1  inf  0  
+15  300  20  1  inf  0  
+16  320  20  1  inf  0  
+17  340  20  1  inf  0  
+18  360  20  1  inf  0  
+19  380  20  1  inf  0  
+20  400  20  1  inf  0  

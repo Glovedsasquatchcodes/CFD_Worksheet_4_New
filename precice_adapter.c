@@ -15,16 +15,16 @@ int *precice_set_interface_vertices(int imax, int jmax, double dx, double dy,
 	double* vertices = (double*)malloc(num_coupling_cells*dimension*sizeof(double));
 			printf("Debug_7\n");
     int coupledcellcount = 0;
-	for(int j=0; j<jmax; j++){ //left boundary
+	for(int j=1; j<jmax-1; j++){ //left boundary
 		if(FLAG[0][j]&(1<<9)){
-            vertices[dimension*coupledcellcount]     = 0;
+            vertices[dimension*coupledcellcount]     = x_origin;
             vertices[dimension*coupledcellcount + 1] = y_origin + (j - 0.5)*dy;
 			vertices[dimension*coupledcellcount + 2] = 0;
             coupledcellcount++;
 		}
 		
 	}
-	for(int j=0; j<jmax; j++){ //Right boundary 
+	for(int j=1; j<jmax-1; j++){ //Right boundary 
 		if(FLAG[imax-1][j]&(1<<9)){
             vertices[dimension*coupledcellcount]     = x_origin + (imax - 2)*dx;
             vertices[dimension*coupledcellcount + 1] = y_origin + (j - 0.5)*dy;
@@ -45,7 +45,7 @@ int *precice_set_interface_vertices(int imax, int jmax, double dx, double dy,
 	for(int i=1; i<imax-1; i++){ //Bottom boundary
 		if(FLAG[i][0]&(1<<9)){
             vertices[dimension*coupledcellcount]     = x_origin + (i - 0.5)*dx;
-            vertices[dimension*coupledcellcount + 1] = 0;
+            vertices[dimension*coupledcellcount + 1] = y_origin;
 			vertices[dimension*coupledcellcount + 2] = 0;
 			coupledcellcount++;
 		}
@@ -70,7 +70,7 @@ printf("n=%d   c=%d \n", num_coupling_cells,coupledcellcount);
 			// scanning from bottom to top, left to right 
 			if(FLAG[i][j]&(1<<9 && (B_N(FLAG[i][j]) | B_S(FLAG[i][j])))){
 				vertices[dimension*coupledcellcount]     = x_origin + (i - 0.5)*dx;
-				vertices[dimension*coupledcellcount + 1] = y_origin + (j - 0.5)*dy;
+				vertices[dimension*coupledcellcount + 1] = y_origin + (j - 1)*dy;
 				vertices[dimension*coupledcellcount + 2] = 0;
 
 				coupledcellcount++;
@@ -82,6 +82,8 @@ printf("n=%d   c=%d \n", num_coupling_cells,coupledcellcount);
 				
      -------------------CASE 2 GENERALIZED SCAN (APPROACH 2) BEGINS--------------------- */
 			printf("Debug_10\n");
+
+	free(vertices);
 	return vertexIDs;
 	
 }
@@ -91,14 +93,14 @@ void precice_write_temperature(	int imax, int jmax, int num_coupling_cells,
                                	int temperatureID, double **TEMP, int **FLAG)
 {
 	int count = 0;
-	for(int j=0; j<jmax; j++){ //left boundary
+	for(int j=1; j<jmax-1; j++){ //left boundary
 		if(FLAG[0][j]&(1<<9)){
 			temperature[count] = TEMP[1][j];
 			count++;
 		}
 		
 	}
-	for(int j=0; j<jmax; j++){ //Right boundary
+	for(int j=1; j<jmax-1; j++){ //Right boundary
 		if(FLAG[imax-1][j]&(1<<9)){
 			temperature[count] = TEMP[imax-2][j];
 			count++;
@@ -149,14 +151,14 @@ void set_coupling_boundary(	int imax, int jmax, double dx, double dy,
 {
 	//precice.readBlockScalarData(temperatureID, num_coupling_cells, vertexIDs, heatflux); shift this to main as well
 	int count = 0;
-	for(int j=0; j<jmax; j++){ //left boundary
+	for(int j=1; j<jmax-1; j++){ //left boundary
 		if(FLAG[0][j]&(1<<9)){
 			TEMP[0][j]= TEMP[1][j]+ dx*(heatflux[count]);
 			count++;
 		}
 		
 	}
-	for(int j=0; j<jmax; j++){ //Right boundary
+	for(int j=1; j<jmax-1; j++){ //Right boundary
 		if(FLAG[imax-1][j]&(1<<9)){
 			TEMP[imax-1][j]= TEMP[imax-2][j]+ dx*(heatflux[count]);
 			count++;

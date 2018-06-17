@@ -175,7 +175,9 @@ void calculate_temp(double **temp, double Pr, double Re, int imax,int jmax,doubl
 	for(int i = 0; i<imax; ++i){
 	  	for(int j = 0; j<jmax; ++j)
 	  	{
-			if((flag[i][j] & (1<<9))==0){
+			if((flag[i][j] & (1<<9)) == 0){
+
+
 		  		if ( B_O(flag[i][j]))  temp[i][j] = temp[i+1][j];
 
 		  		if ( B_W(flag[i][j]))  temp[i][j] = temp[i-1][j];
@@ -192,10 +194,11 @@ void calculate_temp(double **temp, double Pr, double Re, int imax,int jmax,doubl
 
 		  		if ( B_SW(flag[i][j])) temp[i][j] = (temp[i][j-1] + temp[i-1][j])/2;
 
-		  		if (flag[i][j]&(1<<3) ) temp[i][j] = temp[i-1][j];
+		  		
+			}
+				if (flag[i][j]&(1<<3) ) temp[i][j] = temp[i-1][j];
 
 		  		if (flag[i][j]&(1<<4) ) temp[i][j] = TI;
-			}
 	  	}
 	}
 	
@@ -211,7 +214,8 @@ void calculate_temp(double **temp, double Pr, double Re, int imax,int jmax,doubl
 	double TXX;
 	for (int i = 0; i< imax;i++){
 		for (int j=0; j<jmax;j++){
-			if(flag[i][j]&((1<<0)|(1<<3)|(1<<4))){
+			//if(flag[i][j]&((1<<0)|(1<<3)|(1<<4)))  {
+			 if(flag[i][j]&(1<<0)) {
 
 		  		dut_dx = (1/dx)*( (U[i][j]*(temp1[i][j]+temp1[i+1][j])*0.5)-(U[i-1][j]*(temp1[i-1][j]+temp1[i][j])*0.5))+(alpha/dx)*(
 						(fabs(U[i][j])*(temp1[i][j]-temp1[i+1][j])*0.5) - (fabs(U[i-1][j])*(temp1[i-1][j]-temp1[i][j])*0.5)

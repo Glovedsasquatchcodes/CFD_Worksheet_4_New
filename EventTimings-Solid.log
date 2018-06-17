@@ -1,0 +1,8 @@
+Timestamp,Rank,Name,Count,Total,Min,Max,Avg,T%,Data
+# Run finished at: 2018-06-16 19:34:23
+# Number of processors: 1
+2018-06-16 19:34:23,0,_GLOBAL,1,453,453,453,453,99,"[]"
+2018-06-16 19:34:23,0,feedback mesh,1,0,0,0,0,0,"[]"
+2018-06-16 19:34:23,0,initialize,1,54,54,54,54,11,"[]"
+2018-06-16 19:34:23,0,initializeData,1,267,267,267,267,58,"[]"
+2018-06-16 19:34:23,0,receive global mesh,1,48,48,48,48,10,"[]"

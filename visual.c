@@ -14,7 +14,9 @@ void write_vtkFile(const char *szProblem,
                  double **U,
                  double **V,
                  double **P,
-		 double **T
+		 double **T,
+		 double x_origin,
+		 double y_origin
 ) {
   
   int i,j;
@@ -31,7 +33,7 @@ void write_vtkFile(const char *szProblem,
   }
 
   write_vtkHeader( fp, imax, jmax, dx, dy);
-  write_vtkPointCoordinates(fp, imax, jmax, dx, dy);
+  write_vtkPointCoordinates(fp, imax, jmax, dx, dy, x_origin, y_origin);
 
   fprintf(fp,"POINT_DATA %i \n", (imax+1)*(jmax+1) );
 	
@@ -95,7 +97,7 @@ void write_vtkHeader( FILE *fp, int imax, int jmax,
 
 
 void write_vtkPointCoordinates( FILE *fp, int imax, int jmax, 
-                      double dx, double dy) {
+                      double dx, double dy, double x_origin, double y_origin) {
   double originX = 0.0;  
   double originY = 0.0;
 
@@ -104,7 +106,7 @@ void write_vtkPointCoordinates( FILE *fp, int imax, int jmax,
 
   for(j = 0; j < jmax+1; j++) {
     for(i = 0; i < imax+1; i++) {
-      fprintf(fp, "%f %f 0\n", originX+(i*dx), originY+(j*dy) );
+      fprintf(fp, "%f %f 0\n", x_origin+originX+(i*dx), y_origin+originY+(j*dy) );
     }
   }
 }
