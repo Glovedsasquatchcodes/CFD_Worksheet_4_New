@@ -76,31 +76,28 @@ int main(int argc, char* argv[]){
 			double dt_value;           /* time for output */
 			double Pr;
 			double TI;
+			//double T_h;
+			//double T_c;
 			double beta;
 			double x_origin;
 		        double y_origin;
-		        char *geometry = malloc(strlen(problem) + 20);
-		        char *precice_config = malloc(strlen(problem) + 35);
-		        char *participant_name = malloc(strlen(problem) + 20);
-		        char *mesh_name = malloc(strlen(problem) + 20);
-		        char *read_data_name = malloc(strlen(problem) + 20);
-		        char *write_data_name = malloc(strlen(problem) + 20);
+		        char *geometry;
+		        char *precice_config;
+		        char *participant_name;
+		        char *mesh_name;
+		        char *read_data_name;
+		        char *write_data_name;
 
 			//Read and assign the parameter values from file
 			read_parameters(filename, &imax, &jmax, &xlength, &ylength, &dt, &t_end, &tau, &dt_value, &eps, &omg, &alpha, &itermax,&GX, &GY, &Re, &Pr, &UI, &VI, &PI, &TI, &beta, &dx, &dy, &x_origin, &y_origin, geometry, precice_config, participant_name, mesh_name, read_data_name, write_data_name);
 
-			//geometry = "F1_heat_exchanger.pgm";			
+			geometry = "F1_heat_exchanger.pgm";			
 			printf("Name of geometry: %s\n", geometry);
-			//precice_config = "precice-configs/precice_config_exchange_implicit.xml";
-			printf("Name of precice_config: %s\n", precice_config);
-			//participant_name = "Fluid1";
-			printf("Name of participant_name : %s\n", participant_name );
-			//mesh_name = "F1-to-Solid-Mesh";
-			printf("Name of read_data_name  : %s\n",read_data_name );
-			//read_data_name = "Heat-Flux";
-			printf("Name of mesh_name  : %s\n", mesh_name );
-			//write_data_name = "Temperature";
-			printf("Name of write_data_name : %s\n", write_data_name );
+			precice_config = "precice-configs/precice_config_exchange_implicit.xml";
+			participant_name = "Fluid1";
+			mesh_name = "F1-to-Solid-Mesh";
+			read_data_name = "Heat-Flux";
+			write_data_name = "Temperature";
 
 			//Allocate the matrices for P(pressure), U(velocity_x), V(velocity_y), F, and G on heap
 			printf("Allocate the matrices for P(pressure), U(velocity_x), V(velocity_y), F, and G on heap... \n");

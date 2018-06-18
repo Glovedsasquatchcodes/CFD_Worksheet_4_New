@@ -6,7 +6,7 @@ void spec_boundary_val(int imax,int jmax,double **U,double **V,int **flag)
 	for(int i = 0; i<imax; ++i){
 		for(int j = 0; j<jmax; ++j){
 			if(flag[i][j]&(1<<4)){
-				 U[i][j]=5; V[i][j] = 0; V[i][j-1] = 0;
+				 U[i][j]=1; V[i][j] = 0; V[i][j-1] = 0;
 			}
 		}
 	}
