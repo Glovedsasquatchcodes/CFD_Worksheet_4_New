@@ -1,17 +1,17 @@
 #--------------------------------------------
 #            size of the domain             
 #--------------------------------------------
-xlength		3.5
-ylength		0.5
+xlength		8
+ylength		2.9
 
-x_origin    0.0
-y_origin    0.25
+x_origin    -1.5
+y_origin    -0.5
 
 #--------------------------------------------
 #            number of cells
 #--------------------------------------------
-imax	    142
-jmax		42
+imax	    82
+jmax		60
 
 #--------------------------------------------
 #            domain setup
@@ -23,16 +23,16 @@ jmax		42
 # 6 - fluid
 #--------------------------------------------
 
-problem     heated-plate
-geometry    heated-plate.pgm
+problem     F1_heat_exchange
+geometry    F1_heat_exchanger.pgm
 
 #--------------------------------------------
 #               PRECICE
 #--------------------------------------------
 
-precice_config		precice-configs/precice_config_plate_explicit.xml
-participant_name	Fluid
-mesh_name			Fluid-Mesh
+precice_config		precice-configs/precice_config_exchange_implicit.xml
+participant_name	Fluid1
+mesh_name		    F1-to-Solid-Mesh
 read_data_name		Heat-Flux
 write_data_name		Temperature
 
@@ -40,9 +40,9 @@ write_data_name		Temperature
 #               heat transfer
 #--------------------------------------------
 
-TI      0
-Pr      0.05
-beta    0.0
+TI      1
+Pr      0.1
+beta    0.00021
 
 #--------------------------------------------
 #               time steps
@@ -59,7 +59,7 @@ dt_value        0.01
 #--------------------------------------------
 #               pressure
 #--------------------------------------------
-itermax		250
+itermax		500
 eps		    0.0001
 omg		    1.7
 alpha		0.5
@@ -67,7 +67,7 @@ alpha		0.5
 #--------------------------------------------
 #               reynoldsnumber
 #--------------------------------------------
-Re		500
+Re		100
 
 #--------------------------------------------
 #               gravitation
@@ -83,7 +83,7 @@ PI		0
 #--------------------------------------------
 #       initialization velocity
 #--------------------------------------------
-UI		0
+UI		5
 VI		0
 
 

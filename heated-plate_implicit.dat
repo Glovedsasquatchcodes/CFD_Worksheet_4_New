@@ -30,7 +30,7 @@ geometry    heated-plate.pgm
 #               PRECICE
 #--------------------------------------------
 
-precice_config		precice-configs/precice_config_plate_explicit.xml
+precice_config		precice-configs/precice_config_plate_implicit.xml
 participant_name	Fluid
 mesh_name			Fluid-Mesh
 read_data_name		Heat-Flux

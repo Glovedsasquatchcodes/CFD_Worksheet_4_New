@@ -76,28 +76,31 @@ int main(int argc, char* argv[]){
 			double dt_value;           /* time for output */
 			double Pr;
 			double TI;
-			//double T_h;
-			//double T_c;
 			double beta;
 			double x_origin;
 		        double y_origin;
-		        char *geometry;
-		        char *precice_config;
-		        char *participant_name;
-		        char *mesh_name;
-		        char *read_data_name;
-		        char *write_data_name;
+		        char *geometry = malloc(strlen(problem) + 20);
+		        char *precice_config = malloc(strlen(problem) + 35);
+		        char *participant_name = malloc(strlen(problem) + 20);
+		        char *mesh_name = malloc(strlen(problem) + 20);
+		        char *read_data_name = malloc(strlen(problem) + 20);
+		        char *write_data_name = malloc(strlen(problem) + 20);
 
 			//Read and assign the parameter values from file
 			read_parameters(filename, &imax, &jmax, &xlength, &ylength, &dt, &t_end, &tau, &dt_value, &eps, &omg, &alpha, &itermax,&GX, &GY, &Re, &Pr, &UI, &VI, &PI, &TI, &beta, &dx, &dy, &x_origin, &y_origin, geometry, precice_config, participant_name, mesh_name, read_data_name, write_data_name);
 
-			geometry = "natural_convection.pgm";			
+			//geometry = "F1_heat_exchanger.pgm";			
 			printf("Name of geometry: %s\n", geometry);
-			precice_config = "precice-configs/precice_config_plate_implicit.xml";
-			participant_name = "Fluid";
-			mesh_name = "Fluid-Mesh";
-			read_data_name = "Heat-Flux";
-			write_data_name = "Temperature";
+			//precice_config = "precice-configs/precice_config_exchange_implicit.xml";
+			printf("Name of precice_config: %s\n", precice_config);
+			//participant_name = "Fluid1";
+			printf("Name of participant_name : %s\n", participant_name );
+			//mesh_name = "F1-to-Solid-Mesh";
+			printf("Name of read_data_name  : %s\n",read_data_name );
+			//read_data_name = "Heat-Flux";
+			printf("Name of mesh_name  : %s\n", mesh_name );
+			//write_data_name = "Temperature";
+			printf("Name of write_data_name : %s\n", write_data_name );
 
 			//Allocate the matrices for P(pressure), U(velocity_x), V(velocity_y), F, and G on heap
 			printf("Allocate the matrices for P(pressure), U(velocity_x), V(velocity_y), F, and G on heap... \n");
@@ -163,7 +166,9 @@ int main(int argc, char* argv[]){
 			printf("Debug_4\n");
 			//int num_coupling_cells = num_coupling;//determine no. of coupling cells 
 			printf("Debug_5\n");					
-    			int* vertexIDs = precice_set_interface_vertices(imax,jmax, dx, dy, x_origin, y_origin, num_coupling, meshID, flag); // get coupling cell ids
+    		int* vertexIDs = precice_set_interface_vertices(problem, imax, jmax, dx, dy, 
+															x_origin, y_origin, num_coupling,
+															meshID, flag); // get coupling cell ids
 			printf("Debug_11\n");
 
 			// define Dirichlet part of coupling written by this solver
@@ -180,7 +185,8 @@ int main(int argc, char* argv[]){
 			double precice_dt = precicec_initialize();
 
 			// initialize data at coupling interface
-			precice_write_temperature(imax,jmax,num_coupling,temperatureCoupled,vertexIDs,temperatureID,T,flag); 
+			precice_write_temperature(	problem, imax, jmax, num_coupling, temperatureCoupled,
+										vertexIDs, temperatureID, T, flag	); 
 			precicec_initialize_data(); // synchronize with OpenFOAM
 			precicec_readBlockScalarData(heatFluxID, num_coupling, vertexIDs, heatfluxCoupled);//read heatfluxCoupled	changed vertexsize to num_coupling_cells	
 
@@ -201,7 +207,7 @@ int main(int argc, char* argv[]){
 
 				boundaryvalues(imax, jmax, U, V, flag);
 
-				set_coupling_boundary(imax, jmax, dx, dy, heatfluxCoupled, T, flag); 							
+				set_coupling_boundary(problem, imax, jmax, dx, dy, heatfluxCoupled, T, flag); 							
 				calculate_temp(T, Pr, Re, imax, jmax, dx, dy, dt, alpha, U, V, flag, TI);
 				
 				calculate_fg(Re,GX,GY,alpha,dt,dx,dy,imax,jmax,U,V,F,G,flag, beta, T);
@@ -225,7 +231,8 @@ int main(int argc, char* argv[]){
 
 				calculate_uv(dt,dx,dy,imax,jmax,U,V,F,G,P,flag);
 			
-				precice_write_temperature(imax,jmax,num_coupling,temperatureCoupled,vertexIDs,temperatureID,T, flag);
+				precice_write_temperature(	problem, imax, jmax, num_coupling, 
+											temperatureCoupled,vertexIDs,temperatureID,T, flag);
 				precice_dt = precicec_advance(dt); // advance coupling
 				precicec_readBlockScalarData(heatFluxID, num_coupling, vertexIDs, heatfluxCoupled); //changed vertexsize to num_coupling_cells	
 				if(precicec_isActionRequired(coric)){ // timestep not converged
@@ -242,7 +249,7 @@ int main(int argc, char* argv[]){
 				reset_obstacles(U, V, P, T, flag, imax, jmax);
 	
 				if ((t >= n1*dt_value)&&(t!=0.0)){
-					write_vtkFile(sol_directory ,n ,xlength ,ylength ,imax-2 ,jmax-2,dx ,dy ,U ,V ,P,T, x_origin, y_origin);
+					write_vtkFile(sol_directory ,n ,xlength ,ylength ,imax-2 ,jmax-2,dx ,dy ,U ,V ,P,T,x_origin, y_origin);
 					printf("Writing Solutions at %f seconds in the file \n",n1*dt_value);
 				    	n1=n1+ 1;
 				    	continue;

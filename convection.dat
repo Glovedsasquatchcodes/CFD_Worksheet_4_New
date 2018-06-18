@@ -24,15 +24,15 @@ jmax		42
 #--------------------------------------------
 
 problem     convection
-geometry    /natural_convection.pgm
+geometry    natural_convection.pgm
 
 #--------------------------------------------
 #               PRECICE
 #--------------------------------------------
 
-precice_config		/precice-configs/precice_config_plate_explicit.xml
+precice_config		precice-configs/precice_config_plate_explicit.xml
 participant_name	Fluid
-mesh_name			Fluid-Mesh
+mesh_name		Fluid-Mesh
 read_data_name		Heat-Flux
 write_data_name		Temperature
 

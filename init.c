@@ -70,17 +70,18 @@ void read_parameters( const char *szFileName,       /* name of the file */
 
 	
 			//READ_STRING( szFileName, problem);
-			//READ_STRING( szFileName, geometry);
+			READ_STRING( szFileName, geometry);
 			//geometry = "*.pgm";			
-			printf("precong\n");
-			//READ_STRING( szFileName, precice_config);
-			printf("precong\n");
+			printf("precong1\n");
+			READ_STRING( szFileName, precice_config);
+			printf("Name of precice_config: %s\n", precice_config);
+			printf("precong2\n");
 			//participant_name = "Fluid";
-			printf("precong 2\n");
-			//READ_STRING( szFileName, mesh_name);
-			//READ_STRING( szFileName, read_data_name);
-			//READ_STRING( szFileName, write_data_name);
-			//READ_STRING( szFileName, participant_name);
+			printf("precong 3\n");
+			READ_STRING( szFileName, read_data_name);
+			READ_STRING( szFileName, write_data_name);
+			READ_STRING( szFileName, participant_name);
+			READ_STRING( szFileName, mesh_name);
 
 			*dx = *xlength / (double)(*imax);
 			*dy = *ylength / (double)(*jmax);

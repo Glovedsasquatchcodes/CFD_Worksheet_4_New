@@ -44,9 +44,9 @@
       		<max-timesteps value="20000" />
       		<timestep-length value="0.001"/>
       		<max-iterations value="2000" />
-      		<min-iteration-convergence-measure min-iterations="1" data="Temperature" mesh="F1-to-Solid-Mesh"/>
-        	<exchange data="Temperature" mesh="F1-to-Solid-Mesh" from="Fluid1" to="Solid"/>
-        	<exchange data="Heat-Flux" mesh="F1-to-Solid-Mesh" from="Solid" to="Fluid1" initialize="true"/>
+      		<min-iteration-convergence-measure min-iterations="1" data="Temperature" mesh="Fluid-Mesh"/>
+        	<exchange data="Heat-Flux" mesh="F1-to-Solid-Mesh" from="Solid" to="Fluid1"/>
+        	<exchange data="Temperature" mesh="F1-to-Solid-Mesh" from="Fluid1" to="Solid" initialize="true"/>
     	</coupling-scheme:serial-implicit>
 
     </solver-interface>
